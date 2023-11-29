@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.Getter;
 
 import java.util.List;
+import java.util.Map;
 
 @Builder
 @Data
@@ -13,10 +14,10 @@ public class RecipeModel {
     private String recipeName;
 
     // 1. Garlic 2. Carrot 3. Unions 4. Potatoes
-    private List<String> ingredients;
+    private Map<String, String> ingredients;
 
     // Sweet potato
-    private List<String> specificIngredients;
+    private Map<String, String> specificIngredients;
 
     // True
     private Boolean isVegetarian;

@@ -14,5 +14,5 @@ create table recipes
 );
 
 insert into recipes(recipeName, ingredients, specificIngredients, isVegetarian, numberOfServings, cookInstructions, cookingAppliances)
-values ('Potato Mash', 'Garlic:1,Carrot:4,Unions:2,Potatoes:6', 'Potatoes', 'true', '4', 'First place pan on the stove and ready all the vegatables', 'Oven'),
-       ('Sweet Potato Mash', 'Garlic:1,Carrot:4,Unions:2,Sweet potatoes:6', 'Sweet potatoes', 'true', '4', 'First place pan on the stove and ready all the vegatables', 'Oven');
+values ('Potato Mash', 'Garlic:1,Carrot:4,Unions:2,Potatoes:6', 'Potatoes:6', 'true', '4', 'First place pan on the stove and ready all the vegatables', 'Oven'),
+       ('Sweet Potato Mash', 'Garlic:1,Carrot:4,Unions:2,Sweet potatoes:6', 'Sweet potatoes:6', 'true', '4', 'First place pan on the stove and ready all the vegatables', 'Oven');

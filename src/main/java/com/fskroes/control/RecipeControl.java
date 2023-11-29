@@ -9,6 +9,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toMap;
 
 @ApplicationScoped
 public class RecipeControl {
@@ -61,16 +65,42 @@ public class RecipeControl {
         return RecipeModel(createdRecipe);
     }
 
+    public List<RecipeModel> findRecipeWithIngredient(String ingredient) {
+        var allRecipes = getAllRecipes();
+        return allRecipes
+                .stream()
+                .filter(model -> model.getIngredients().containsKey(ingredient))
+                .toList();
+    }
+
+    public List<RecipeModel> searchCookingInstructions(String searchQuery) {
+        var recipes = recipeRepository.searchInstruction(searchQuery);
+        return recipes
+                .stream()
+                .map(this::RecipeModel)
+                .toList();
+    }
+
     private RecipeModel RecipeModel(@NotNull RecipeEntity recipeEntity) {
 
         return RecipeModel.builder()
                 .recipeName(recipeEntity.getRecipeName())
-                .ingredients(Arrays.stream(recipeEntity.getIngredients().split(",")).toList())
-                .specificIngredients(Arrays.stream(recipeEntity.getSpecificIngredients().split(",")).toList())
+                .ingredients(ingredientsToMap(recipeEntity.getIngredients()))
+                .specificIngredients(ingredientsToMap(recipeEntity.getSpecificIngredients()))
                 .isVegetarian(Boolean.valueOf(recipeEntity.getIsVegetarian()))
                 .numberOfServings(Integer.valueOf(recipeEntity.getNumberOfServings()))
                 .cookInstructions(recipeEntity.getCookInstructions())
                 .cookingAppliances(recipeEntity.getCookingAppliances())
                 .build();
+    }
+
+    private Map<String, String> ingredientsToMap(String ingredients) {
+        var ingredientsWithAmount = Arrays.stream(ingredients.split(",")).toList();
+        return ingredientsWithAmount
+                .stream()
+                .map(ingredientString -> ingredientString
+                        .split(":")
+                )
+                .collect(toMap(arr -> arr[0], arr -> arr[1], (v1, v2) -> v1));
     }
 }

@@ -4,6 +4,7 @@ package com.fskroes.control;
 import com.fskroes.entity.RecipeEntity;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
+import io.quarkus.panache.common.Parameters;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 
@@ -37,4 +38,13 @@ public class RecipeRepository implements PanacheRepository<RecipeEntity> {
     public List<RecipeEntity> findServings(String servings) {
         return list("numberOfServings", servings);
     }
+
+    public List<RecipeEntity> searchInstruction(String searchInstruction) {
+        var searchInput = "%" + searchInstruction + "%";
+        return list("cookInstructions like ?1", searchInput);
+    }
+
+//    public List<RecipeEntity> findRecipeBasedOnIngredient(String ingredient) {
+//        return list("ingredients", ingredient);
+//    }
 }

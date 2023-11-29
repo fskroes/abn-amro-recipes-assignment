@@ -8,10 +8,9 @@ import org.hibernate.PersistentObjectException;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @QuarkusTest
 public class RecipeControlTest {
@@ -23,8 +22,8 @@ public class RecipeControlTest {
         var expectedRecipes = List.of(
                 RecipeModel.builder()
                         .recipeName("Potato Mash")
-                        .ingredients(List.of("Garlic:1", "Carrot:4", "Unions:2", "Potatoes:6"))
-                        .specificIngredients(List.of("Potatoes"))
+                        .ingredients(Map.of("Garlic", "1", "Carrot", "4", "Unions", "2", "Potatoes", "6"))
+                        .specificIngredients(Map.of("Potatoes", "6"))
                         .isVegetarian(true)
                         .numberOfServings(4)
                         .cookInstructions("First place pan on the stove and ready all the vegatables")
@@ -32,8 +31,8 @@ public class RecipeControlTest {
                         .build(),
                 RecipeModel.builder()
                         .recipeName("Sweet Potato Mash")
-                        .ingredients(List.of("Garlic:1", "Carrot:4", "Unions:2", "Sweet potatoes:6"))
-                        .specificIngredients(List.of("Sweet potatoes"))
+                        .ingredients(Map.of("Garlic", "1", "Carrot", "4", "Unions", "2", "Sweet potatoes", "6"))
+                        .specificIngredients(Map.of("Sweet potatoes", "6"))
                         .isVegetarian(true)
                         .numberOfServings(4)
                         .cookInstructions("First place pan on the stove and ready all the vegatables")
@@ -51,8 +50,8 @@ public class RecipeControlTest {
     void createRecipe_givenEntityAreExist_throwsDetachedEntityPassedToPersistException() {
         var expectedRecipe = RecipeModel.builder()
                 .recipeName("Potato Mash")
-                .ingredients(List.of("Garlic:1", "Carrot:4", "Unions:2", "Potatoes:6"))
-                .specificIngredients(List.of("Potatoes"))
+                .ingredients(Map.of("Garlic", "1", "Carrot", "4", "Unions", "2", "Potatoes", "6"))
+                .specificIngredients(Map.of("Potatoes", "6"))
                 .isVegetarian(true)
                 .numberOfServings(4)
                 .cookInstructions("First place pan on the stove and ready all the vegatables")
@@ -66,8 +65,8 @@ public class RecipeControlTest {
     void getRecipe_findRecipeBasedOnName_returnFoundRecipe() {
         var expectedRecipe = RecipeModel.builder()
                 .recipeName("Sweet Potato Mash")
-                .ingredients(List.of("Garlic:1", "Carrot:4", "Unions:2", "Sweet potatoes:6"))
-                .specificIngredients(List.of("Sweet potatoes"))
+                .ingredients(Map.of("Garlic", "1", "Carrot", "4", "Unions", "2", "Potatoes", "6"))
+                .specificIngredients(Map.of("Potatoes", "6"))
                 .isVegetarian(true)
                 .numberOfServings(4)
                 .cookInstructions("First place pan on the stove and ready all the vegatables")
@@ -97,8 +96,8 @@ public class RecipeControlTest {
         var expectedRecipes = List.of(
                 RecipeModel.builder()
                         .recipeName("Potato Mash")
-                        .ingredients(List.of("Garlic:1", "Carrot:4", "Unions:2", "Potatoes:6"))
-                        .specificIngredients(List.of("Potatoes"))
+                        .ingredients(Map.of("Garlic", "1", "Carrot", "4", "Unions", "2", "Potatoes", "6"))
+                        .specificIngredients(Map.of("Potatoes", "6"))
                         .isVegetarian(true)
                         .numberOfServings(4)
                         .cookInstructions("First place pan on the stove and ready all the vegatables")
@@ -106,8 +105,8 @@ public class RecipeControlTest {
                         .build(),
                 RecipeModel.builder()
                         .recipeName("Sweet Potato Mash")
-                        .ingredients(List.of("Garlic:1", "Carrot:4", "Unions:2", "Sweet potatoes:6"))
-                        .specificIngredients(List.of("Sweet potatoes"))
+                        .ingredients(Map.of("Garlic", "1", "Carrot", "4", "Unions", "2", "Potatoes", "6"))
+                        .specificIngredients(Map.of("Sweet potatoes", "6"))
                         .isVegetarian(true)
                         .numberOfServings(4)
                         .cookInstructions("First place pan on the stove and ready all the vegatables")
@@ -127,8 +126,8 @@ public class RecipeControlTest {
         var expectedRecipes = List.of(
                 RecipeModel.builder()
                         .recipeName("Potato Mash")
-                        .ingredients(List.of("Garlic:1", "Carrot:4", "Unions:2", "Potatoes:6"))
-                        .specificIngredients(List.of("Potatoes"))
+                        .ingredients(Map.of("Garlic", "1", "Carrot", "4", "Unions", "2", "Potatoes", "6"))
+                        .specificIngredients(Map.of("Potatoes", "6"))
                         .isVegetarian(true)
                         .numberOfServings(4)
                         .cookInstructions("First place pan on the stove and ready all the vegatables")
@@ -136,8 +135,8 @@ public class RecipeControlTest {
                         .build(),
                 RecipeModel.builder()
                         .recipeName("Sweet Potato Mash")
-                        .ingredients(List.of("Garlic:1", "Carrot:4", "Unions:2", "Sweet potatoes:6"))
-                        .specificIngredients(List.of("Sweet potatoes"))
+                        .ingredients(Map.of("Garlic", "1", "Carrot", "4", "Unions", "2", "Potatoes", "6"))
+                        .specificIngredients(Map.of("Sweet potatoes", "6"))
                         .isVegetarian(true)
                         .numberOfServings(4)
                         .cookInstructions("First place pan on the stove and ready all the vegatables")
@@ -163,7 +162,70 @@ public class RecipeControlTest {
     }
 
     @Test
+    void findRecipeWithIngredient_givenIngredient_returnRecipeWithGivenIngredient() {
+        var ingredient = "Carrot";
+
+        var response = recipeControl.findRecipeWithIngredient(ingredient);
+
+        assertNotNull(response);
+        assertEquals(2, response.size());
+    }
+
+    @Test
+    void findRecipeWithIngredient_givenNonExistingIngredient_returnEmptyList() {
+        var ingredient = "Spinach";
+
+        var response = recipeControl.findRecipeWithIngredient(ingredient);
+
+        assertNotNull(response);
+        assertEquals(0, response.size());
+    }
+
+    @Test
+    void searchCookingInstructions_withExistingInstruction_returnsRecipeModel() {
+        var searchQuery = "stove";
+
+        var response = recipeControl.searchCookingInstructions(searchQuery);
+
+        assertNotNull(response);
+        assertEquals(2, response.size());
+    }
+
+    @Test
+    void searchCookingInstructions_withNonExistingInstruction_returnsEmtyList() {
+        var searchQuery = "bla";
+
+        var response = recipeControl.searchCookingInstructions(searchQuery);
+
+        assertNotNull(response);
+        assertEquals(0, response.size());
+    }
+
+    @Test
     void getRecipe_findNonExistingRecipeBasedOnName_throws() {
         assertThrows(NotFoundException.class, () -> recipeControl.getRecipe("Pathfinder"));
+    }
+
+    private List<RecipeModel> exampleRecipes() {
+        return List.of(
+                RecipeModel.builder()
+                        .recipeName("Potato Mash")
+                        .ingredients(Map.of("Garlic", "1", "Carrot", "4", "Unions", "2", "Potatoes", "6"))
+                        .specificIngredients(Map.of("Potatoes", "6"))
+                        .isVegetarian(true)
+                        .numberOfServings(4)
+                        .cookInstructions("First place pan on the stove and ready all the vegatables")
+                        .cookingAppliances("Oven")
+                        .build(),
+                RecipeModel.builder()
+                        .recipeName("Sweet Potato Mash")
+                        .ingredients(Map.of("Garlic", "1", "Carrot", "4", "Unions", "2", "Potatoes", "6"))
+                        .specificIngredients(Map.of("Sweet potatoes", "6"))
+                        .isVegetarian(true)
+                        .numberOfServings(4)
+                        .cookInstructions("First place pan on the stove and ready all the vegatables")
+                        .cookingAppliances("Oven")
+                        .build()
+        );
     }
 }
