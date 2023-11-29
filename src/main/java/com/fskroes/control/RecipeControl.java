@@ -2,8 +2,8 @@ package com.fskroes.control;
 
 import com.fskroes.entity.RecipeEntity;
 import com.fskroes.model.RecipeModel;
-import com.fskroes.service.RecipeService;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.NotFoundException;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,21 +13,33 @@ import java.util.List;
 @ApplicationScoped
 public class RecipeControl {
 
-    private final RecipeService recipeService;
-
-    public RecipeControl(RecipeService recipeService) {
-        this.recipeService = recipeService;
-    }
+    @Inject
+    private RecipeRepository recipeRepository;
 
     public List<RecipeModel> getAllRecipes() {
-        var recipes = recipeService.getAll();
+        var recipes = recipeRepository.findAllRecipes();
 
         return recipes.stream().map(this::RecipeModel).toList();
     }
 
+    public List<RecipeModel> getRecipeOnServing(Integer serving) {
+        var recipes = recipeRepository.findServings(String.valueOf(serving));
+        return recipes
+                .stream()
+                .map(this::RecipeModel)
+                .toList();
+    }
+
+    public List<RecipeModel> getRecipeVegetarian(Boolean isVegetarian) {
+        return recipeRepository.findIsVegetarian(String.valueOf(isVegetarian))
+                .stream()
+                .map(this::RecipeModel)
+                .toList();
+    }
+
     public RecipeModel getRecipe(String recipeName) {
 
-        var recipeEntity = recipeService.findByRecipeName(recipeName);
+        var recipeEntity = recipeRepository.findRecipe(recipeName);
 
         return recipeEntity
                 .map(this::RecipeModel)
@@ -44,7 +56,7 @@ public class RecipeControl {
                 recipeModel.getNumberOfServings().toString(),
                 recipeModel.getCookInstructions(),
                 recipeModel.getCookingAppliances());
-        var createdRecipe = recipeService.create(recipeEntity);
+        var createdRecipe = recipeRepository.create(recipeEntity);
 
         return RecipeModel(createdRecipe);
     }
@@ -52,13 +64,13 @@ public class RecipeControl {
     private RecipeModel RecipeModel(@NotNull RecipeEntity recipeEntity) {
 
         return RecipeModel.builder()
-                .recipeName(recipeEntity.recipeName)
-                .ingredients(Arrays.stream(recipeEntity.ingredients.split(",")).toList())
-                .specificIngredients(Arrays.stream(recipeEntity.specificIngredients.split(",")).toList())
-                .isVegetarian(Boolean.valueOf(recipeEntity.isVegetarian))
-                .numberOfServings(Integer.valueOf(recipeEntity.numberOfServings))
-                .cookInstructions(recipeEntity.cookInstructions)
-                .cookingAppliances(recipeEntity.cookingAppliances)
+                .recipeName(recipeEntity.getRecipeName())
+                .ingredients(Arrays.stream(recipeEntity.getIngredients().split(",")).toList())
+                .specificIngredients(Arrays.stream(recipeEntity.getSpecificIngredients().split(",")).toList())
+                .isVegetarian(Boolean.valueOf(recipeEntity.getIsVegetarian()))
+                .numberOfServings(Integer.valueOf(recipeEntity.getNumberOfServings()))
+                .cookInstructions(recipeEntity.getCookInstructions())
+                .cookingAppliances(recipeEntity.getCookingAppliances())
                 .build();
     }
 }

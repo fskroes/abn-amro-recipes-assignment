@@ -81,6 +81,88 @@ public class RecipeControlTest {
     }
 
     @Test
+    void getRecipeVegetarian_recipeIsNotVegetarian_returnsEmptyList() {
+        var isVegetarian = false;
+        var expectedRecipes = List.of();
+
+        var response = recipeControl.getRecipeVegetarian(isVegetarian);
+
+        assertNotNull(response);
+        assertEquals(expectedRecipes, response);
+    }
+
+    @Test
+    void getRecipeVegetarian_recipeIsVegetarian_returnsOnlyVegetarianRecipes() {
+        var isVegetarian = true;
+        var expectedRecipes = List.of(
+                RecipeModel.builder()
+                        .recipeName("Potato Mash")
+                        .ingredients(List.of("Garlic:1", "Carrot:4", "Unions:2", "Potatoes:6"))
+                        .specificIngredients(List.of("Potatoes"))
+                        .isVegetarian(true)
+                        .numberOfServings(4)
+                        .cookInstructions("First place pan on the stove and ready all the vegatables")
+                        .cookingAppliances("Oven")
+                        .build(),
+                RecipeModel.builder()
+                        .recipeName("Sweet Potato Mash")
+                        .ingredients(List.of("Garlic:1", "Carrot:4", "Unions:2", "Sweet potatoes:6"))
+                        .specificIngredients(List.of("Sweet potatoes"))
+                        .isVegetarian(true)
+                        .numberOfServings(4)
+                        .cookInstructions("First place pan on the stove and ready all the vegatables")
+                        .cookingAppliances("Oven")
+                        .build()
+        );
+
+        var response = recipeControl.getRecipeVegetarian(isVegetarian);
+
+        assertNotNull(response);
+        assertEquals(expectedRecipes, response);
+    }
+
+    @Test
+    void getRecipeOnServing_findRecipeBasedServing_returnFoundRecipes() {
+        var servingAmount = 4;
+        var expectedRecipes = List.of(
+                RecipeModel.builder()
+                        .recipeName("Potato Mash")
+                        .ingredients(List.of("Garlic:1", "Carrot:4", "Unions:2", "Potatoes:6"))
+                        .specificIngredients(List.of("Potatoes"))
+                        .isVegetarian(true)
+                        .numberOfServings(4)
+                        .cookInstructions("First place pan on the stove and ready all the vegatables")
+                        .cookingAppliances("Oven")
+                        .build(),
+                RecipeModel.builder()
+                        .recipeName("Sweet Potato Mash")
+                        .ingredients(List.of("Garlic:1", "Carrot:4", "Unions:2", "Sweet potatoes:6"))
+                        .specificIngredients(List.of("Sweet potatoes"))
+                        .isVegetarian(true)
+                        .numberOfServings(4)
+                        .cookInstructions("First place pan on the stove and ready all the vegatables")
+                        .cookingAppliances("Oven")
+                        .build()
+        );
+
+        var response = recipeControl.getRecipeOnServing(servingAmount);
+
+        assertNotNull(response);
+        assertEquals(expectedRecipes, response);
+    }
+
+    @Test
+    void getRecipeOnServing_findNonExistingServingAmount_returnEmptyList() {
+        var servingAmount = -1;
+        var expectedRecipes = List.of();
+
+        var response = recipeControl.getRecipeOnServing(servingAmount);
+
+        assertNotNull(response);
+        assertEquals(expectedRecipes, response);
+    }
+
+    @Test
     void getRecipe_findNonExistingRecipeBasedOnName_throws() {
         assertThrows(NotFoundException.class, () -> recipeControl.getRecipe("Pathfinder"));
     }
