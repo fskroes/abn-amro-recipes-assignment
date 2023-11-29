@@ -10,7 +10,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toMap;
 
@@ -51,6 +50,7 @@ public class RecipeControl {
     }
 
     public RecipeModel createRecipe(RecipeModel recipeModel) {
+        // TODO :: make ID auto-increment
         RecipeEntity recipeEntity = new RecipeEntity(
                 1L,
                 recipeModel.getRecipeName(),
@@ -78,6 +78,26 @@ public class RecipeControl {
         return recipes
                 .stream()
                 .map(this::RecipeModel)
+                .toList();
+    }
+
+    public List<RecipeModel> getRecipeOnServingAndIngredient(Integer servings, String ingredient) {
+        var allRecipes = getAllRecipes();
+        return allRecipes
+                .stream()
+                .filter(model ->
+                        model.getIngredients().containsKey(ingredient) && model.getNumberOfServings().equals(servings)
+                )
+                .toList();
+    }
+
+    public List<RecipeModel> getRecipeOnInstructionAndIngredient(String instruction, String ingredient) {
+        var allRecipes = getAllRecipes();
+        return allRecipes
+                .stream()
+                .filter(model ->
+                        model.getIngredients().containsKey(ingredient) && model.getCookInstructions().contains(instruction)
+                )
                 .toList();
     }
 

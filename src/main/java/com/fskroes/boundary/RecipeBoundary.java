@@ -45,4 +45,41 @@ public class RecipeBoundary {
         var savedCustomer = recipeControl.createRecipe(recipeModel);
         return Response.status(Response.Status.CREATED).entity(savedCustomer).build();
     }
+
+    // ------------- EXAMPLE FROM ASSIGNMENT -------------
+    @GET
+    @Path("/vegetarian")
+    public Uni<List<RecipeModel>> getRecipeIsVegetarian(@QueryParam("") Boolean isVegetarian) {
+        var vegetarianRecipies = recipeControl.getRecipeVegetarian(isVegetarian);
+
+        return Uni
+                .createFrom()
+                .item(vegetarianRecipies);
+    }
+
+    @GET
+    @Path("/recipe")
+    public Uni<List<RecipeModel>> getRecipeBasedOnServingAndIngredient(
+            @QueryParam("") Integer servings,
+            @QueryParam("") String ingredient
+    ) {
+        var recipies = recipeControl.getRecipeOnServingAndIngredient(servings, ingredient);
+
+        return Uni
+                .createFrom()
+                .item(recipies);
+    }
+
+    @GET
+    @Path("/recipe")
+    public Uni<List<RecipeModel>> getRecipeBasedOnInstructionAndIngredient(
+            @QueryParam("") String instruction,
+            @QueryParam("") String ingredient
+    ) {
+        var recipies = recipeControl.getRecipeOnInstructionAndIngredient(instruction, ingredient);
+
+        return Uni
+                .createFrom()
+                .item(recipies);
+    }
 }
