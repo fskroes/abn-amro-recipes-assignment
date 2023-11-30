@@ -50,19 +50,22 @@ public class RecipeControl {
     }
 
     public RecipeModel createRecipe(RecipeModel recipeModel) {
-        // TODO :: make ID auto-increment
-        RecipeEntity recipeEntity = new RecipeEntity(
-                1L,
-                recipeModel.getRecipeName(),
-                recipeModel.getIngredients().toString(),
-                recipeModel.getSpecificIngredients().toString(),
-                recipeModel.getIsVegetarian().toString(),
-                recipeModel.getNumberOfServings().toString(),
-                recipeModel.getCookInstructions(),
-                recipeModel.getCookingAppliances());
+        var recipeEntity = new RecipeEntity();
+        recipeEntity.setRecipeName(recipeModel.getRecipeName());
+        recipeEntity.setIngredients(recipeModel.getIngredients().toString());
+        recipeEntity.setSpecificIngredients(recipeModel.getSpecificIngredients().toString());
+        recipeEntity.setIsVegetarian(recipeModel.getIsVegetarian().toString().toLowerCase());
+        recipeEntity.setNumberOfServings(recipeModel.getNumberOfServings().toString());
+        recipeEntity.setCookInstructions(recipeModel.getCookInstructions());
+        recipeEntity.setCookingAppliances(recipeModel.getCookingAppliances());
+
         var createdRecipe = recipeRepository.create(recipeEntity);
 
         return RecipeModel(createdRecipe);
+    }
+
+    public Boolean deleteRecipe(Long id) {
+        return recipeRepository.remove(id);
     }
 
     public List<RecipeModel> findRecipeWithIngredient(String ingredient) {

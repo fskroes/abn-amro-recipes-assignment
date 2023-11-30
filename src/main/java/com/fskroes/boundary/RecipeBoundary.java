@@ -6,7 +6,14 @@ import com.fskroes.model.RecipeModel;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.*;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
@@ -44,6 +51,15 @@ public class RecipeBoundary {
     public Response createRecipe(RecipeModel recipeModel) {
         var savedCustomer = recipeControl.createRecipe(recipeModel);
         return Response.status(Response.Status.CREATED).entity(savedCustomer).build();
+    }
+
+    @DELETE
+    @Path("recipe/{id}")
+    public Response delete(@PathParam("id") Long id) {
+        return Response
+                .status(Response.Status.CREATED)
+                .entity(recipeControl.deleteRecipe(id))
+                .build();
     }
 
     // ------------- EXAMPLE FROM ASSIGNMENT -------------

@@ -20,6 +20,10 @@ public class RecipeRepository implements PanacheRepository<RecipeEntity> {
         return findById(recipe.id);
     }
 
+    public Boolean remove(Long id) {
+        return deleteById(id);
+    }
+
     public List<RecipeEntity> findAllRecipes() {
         return findAll()
                 .stream()

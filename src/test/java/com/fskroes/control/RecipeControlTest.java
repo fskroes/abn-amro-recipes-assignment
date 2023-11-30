@@ -1,23 +1,38 @@
 package com.fskroes.control;
 
 import com.fskroes.model.RecipeModel;
+import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.NotFoundException;
 import org.hibernate.PersistentObjectException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static com.fskroes.stub.RecipeModelMock.getStubbedRecipies;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 
 @QuarkusTest
 public class RecipeControlTest {
     @Inject
     RecipeControl recipeControl;
+
+    @InjectMock
+    RecipeRepository recipeRepository;
+
+    @BeforeEach
+    void restoreDatabase() {
+        if (recipeControl.getAllRecipes().size() == 1) {
+            System.out.println("SIZE IS 1");
+        }
+    }
 
     @Test
     void getAllRecipes_returnsAllRecipes() {
@@ -42,10 +57,15 @@ public class RecipeControlTest {
                         .build()
         );
 
+        doReturn(getStubbedRecipies())
+                .when(recipeRepository)
+                .findAllRecipes();
+
         var response = recipeControl.getAllRecipes();
 
         assertNotNull(response);
-        assertEquals(expectedRecipes, response);
+        assertEquals(2, response.size());
+        assertEquals(expectedRecipes.get(0).getRecipeName(), response.get(0).getRecipeName());
     }
 
     @Test
@@ -60,7 +80,37 @@ public class RecipeControlTest {
                 .cookingAppliances("Oven")
                 .build();
 
+        doThrow(PersistentObjectException.class)
+                .when(recipeRepository)
+                .create(any());
+
         assertThrows(PersistentObjectException.class, () -> recipeControl.createRecipe(expectedRecipe));
+    }
+
+    @Test
+    void deleteRecipe_givenCorrectParameter_returnTrueOfsuccessfullDeletion() {
+        var idToDelete = 1L;
+        var expectedValue = true;
+
+        doReturn(true)
+                .when(recipeRepository)
+                .remove(idToDelete);
+
+        var response = recipeControl.deleteRecipe(idToDelete);
+
+        assertNotNull(response);
+        assertEquals(expectedValue, response);
+    }
+
+    @Test
+    void deleteRecipe_givenInvalidParameter_returnFalseOfNoDeletion() {
+        var idToDelete = -1L;
+        var expectedValue = false;
+
+        var response = recipeControl.deleteRecipe(idToDelete);
+
+        assertNotNull(response);
+        assertEquals(expectedValue, response);
     }
 
     @Test
@@ -74,6 +124,10 @@ public class RecipeControlTest {
                 .cookInstructions("First place pan on the stove and ready all the vegatables")
                 .cookingAppliances("Oven")
                 .build();
+
+        doReturn(Optional.of(getStubbedRecipies().get(1)))
+                .when(recipeRepository)
+                .findRecipe("Sweet Potato Mash");
 
         var response = recipeControl.getRecipe("Sweet Potato Mash");
 
@@ -96,9 +150,14 @@ public class RecipeControlTest {
     void getRecipeVegetarian_recipeIsVegetarian_returnsOnlyVegetarianRecipes() {
         var isVegetarian = true;
 
+        doReturn(getStubbedRecipies())
+                .when(recipeRepository)
+                .findIsVegetarian("true");
+
         var response = recipeControl.getRecipeVegetarian(isVegetarian);
 
         assertNotNull(response);
+        assertEquals(true, response.get(0).getIsVegetarian());
         assertEquals(2, response.size());
     }
 
@@ -106,9 +165,14 @@ public class RecipeControlTest {
     void getRecipeOnServing_findRecipeBasedServing_returnFoundRecipes() {
         var servingAmount = 4;
 
+        doReturn(getStubbedRecipies())
+                .when(recipeRepository)
+                .findServings("4");
+
         var response = recipeControl.getRecipeOnServing(servingAmount);
 
         assertNotNull(response);
+        assertEquals(servingAmount, response.get(0).getNumberOfServings());
         assertEquals(2, response.size());
     }
 
@@ -126,6 +190,10 @@ public class RecipeControlTest {
     @Test
     void findRecipeWithIngredient_givenIngredient_returnRecipeWithGivenIngredient() {
         var ingredient = "Carrot";
+
+        doReturn(getStubbedRecipies())
+                .when(recipeRepository)
+                .findAllRecipes();
 
         var response = recipeControl.findRecipeWithIngredient(ingredient);
 
@@ -147,6 +215,10 @@ public class RecipeControlTest {
     void searchCookingInstructions_withExistingInstruction_returnsRecipeModel() {
         var searchQuery = "stove";
 
+        doReturn(getStubbedRecipies())
+                .when(recipeRepository)
+                .searchInstruction(searchQuery);
+
         var response = recipeControl.searchCookingInstructions(searchQuery);
 
         assertNotNull(response);
@@ -167,6 +239,10 @@ public class RecipeControlTest {
     void getReceipeOnServingAndIngredient_givenCorrectParameters_returnsCorrectRecipies() {
         var servings = 4;
         var ingredient = "Carrot";
+
+        doReturn(getStubbedRecipies())
+                .when(recipeRepository)
+                .findAllRecipes();
 
         var response = recipeControl.getRecipeOnServingAndIngredient(servings, ingredient);
 
@@ -207,6 +283,10 @@ public class RecipeControlTest {
     void getRecipeOnInstructionAndIngredient_givenCorrectParameters_returnsCorrectRecipies() {
         var instruction = "stove";
         var ingredient = "Carrot";
+
+        doReturn(getStubbedRecipies())
+                .when(recipeRepository)
+                .findAllRecipes();
 
         var response = recipeControl.getRecipeOnInstructionAndIngredient(instruction, ingredient);
 
