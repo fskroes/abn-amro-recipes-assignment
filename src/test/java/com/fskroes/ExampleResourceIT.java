@@ -11,7 +11,4 @@ import java.net.URL;
 public class ExampleResourceIT extends ExampleResourceTest {
     // Execute the same tests but in packaged mode.
 
-    @TestHTTPEndpoint(RecipeBoundary.class)
-    @TestHTTPResource
-    URL url;
 }

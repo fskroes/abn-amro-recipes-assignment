@@ -28,9 +28,8 @@ public class RecipeBoundary {
     RecipeControl recipeControl;
 
     @GET
-    @Path("/recipes")
+    @Path("/recipe")
     public Uni<List<RecipeModel>> getRecipes() {
-
         return Uni
                 .createFrom()
                 .item(recipeControl.getAllRecipes());
@@ -38,7 +37,7 @@ public class RecipeBoundary {
 
     @GET
     @Path("/recipe")
-    public Uni<RecipeModel> getRecipe(@QueryParam("") String recipeName) {
+    public Uni<RecipeModel> getRecipe(@QueryParam("name") String recipeName) {
         var specificRecipe = recipeControl.getRecipe(recipeName);
 
         return Uni
