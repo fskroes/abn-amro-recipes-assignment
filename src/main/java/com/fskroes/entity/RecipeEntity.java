@@ -44,23 +44,4 @@ public class RecipeEntity extends PanacheEntity {
     private String cookingAppliances;
 
     public RecipeEntity() {}
-
-    public RecipeEntity(
-            Long id,
-            String recipeName,
-            String ingredients,
-            String specificIngredients,
-            String isVegetarian,
-            String numberOfServings,
-            String cookInstructions,
-            String cookingAppliances) {
-        this.id = id;
-        this.recipeName = recipeName;
-        this.ingredients = ingredients;
-        this.specificIngredients = specificIngredients;
-        this.isVegetarian = isVegetarian;
-        this.numberOfServings = numberOfServings;
-        this.cookInstructions = cookInstructions;
-        this.cookingAppliances = cookingAppliances;
-    }
 }

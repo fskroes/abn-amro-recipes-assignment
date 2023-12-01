@@ -47,8 +47,4 @@ public class RecipeRepository implements PanacheRepository<RecipeEntity> {
         var searchInput = "%" + searchInstruction + "%";
         return list("cookInstructions like ?1", searchInput);
     }
-
-//    public List<RecipeEntity> findRecipeBasedOnIngredient(String ingredient) {
-//        return list("ingredients", ingredient);
-//    }
 }

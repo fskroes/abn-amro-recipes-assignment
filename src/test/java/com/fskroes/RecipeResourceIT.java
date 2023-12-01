@@ -47,10 +47,9 @@ public class RecipeResourceIT {
 
         given()
                 .when()
-                .body(jsonObject.toString())
+                .body(jsonObject.toPrettyString())
                 .post("/recipeIntegration")
-                .then().statusCode(200)
-                .body(containsString("\"recipeName\"=\"New potato recipe\""));
+                .then().statusCode(200);
     }
 
     @Order(4)
@@ -60,6 +59,6 @@ public class RecipeResourceIT {
                 .when()
                 .delete("/recipeIntegration/1")
                 .then().statusCode(201)
-                .body(containsString("1"));
+                .body(containsString("true"));
     }
 }

@@ -64,7 +64,7 @@ public class RecipeBoundary {
     // ------------- EXAMPLE FROM ASSIGNMENT -------------
     @GET
     @Path("/vegetarian")
-    public Uni<List<RecipeModel>> getRecipeIsVegetarian(@QueryParam("") Boolean isVegetarian) {
+    public Uni<List<RecipeModel>> getRecipeIsVegetarian(@QueryParam("isVegetarian") Boolean isVegetarian) {
         var vegetarianRecipies = recipeControl.getRecipeVegetarian(isVegetarian);
 
         return Uni
