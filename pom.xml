@@ -65,6 +65,12 @@
       <artifactId>flyway-sqlserver</artifactId>
     </dependency>
 
+    <!--  OpenAPI specificatio  -->
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-smallrye-openapi</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-resteasy-reactive-jackson</artifactId>

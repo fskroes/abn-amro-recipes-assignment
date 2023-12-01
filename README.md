@@ -48,12 +48,9 @@ You can then execute your native executable with: `./target/recipes-assignment-q
 If you want to learn more about building native executables, please consult https://quarkus.io/guides/maven-tooling.
 
 ## Related Guides
+For API specification, please open openapi.yaml file in main directory also for 
+IntegrationTest I have used Swagger-UI.
+Please see the following page http://localhost:8080/q/swagger-ui/
 
-
-## Provided Code
-
-### RESTEasy Reactive
-
-Easily start your Reactive RESTful Web Services
-
-[Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
+1. `./mvnw compile quarkus:dev`
+2. Visit `http://localhost:8080/q/swagger-ui/`

@@ -1,0 +1,76 @@
+openapi: 3.0.3
+info:
+  title: Recipes Assignment with Quarkus
+  description: Recipes Assignment with Quarkus
+  version: 1.0.0
+servers:
+  - url: 'https://localhost:8080/q/openapi'
+    description: Optional dev mode server description
+paths:
+  /recipe:
+    get:
+      responses:
+        200:
+          description: Gives a list of all recipes
+          content:
+            application/json: {}
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecipeModel'
+      responses:
+        200:
+          description: new Recipe resource created
+          content:
+            application/json: { }
+    delete:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecipeModel'
+      responses:
+        200:
+          description: OK - Recipe resource deleted
+          content:
+            application/json: { }
+  /recipe/name:
+    get:
+      responses:
+        200:
+          description: Gives found recipe
+          content:
+            application/json: { }
+components:
+  schemas:
+    RecipeModel:
+      properties:
+        id:
+          type: integer
+        recipeName:
+          type: string
+        ingredients:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/Ingredients'
+        specificIngredients:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/Ingredients'
+        isVegetarian:
+          type: boolean
+        numberOfServings:
+          type: integer
+        cookInstructions:
+          type: string
+        cookingAppliances:
+          type: string
+    Ingredients:
+      type: object
+      properties:
+        ingredient:
+          type: string
+        amount:
+          type: integer
